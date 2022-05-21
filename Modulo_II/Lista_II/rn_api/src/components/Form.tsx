@@ -2,33 +2,8 @@ import React from 'react';
 import { FlatList, ListRenderItemInfo, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import api from '../services/api';
-
-type BookProps = {
-  id: string;
-  author: string;
-  title: string;
-  url: string;
-};
-
-
-const Item: React.FC<BookProps> = ({ author, title, url, id }: BookProps) => (
-  <View style={styles.item}>
-    <View style={styles.line}>
-      <Icon name="user" color='#282828' size={16} />
-      <Text style={styles.text}>{author}</Text>
-    </View>
-
-    <View style={styles.line}>
-      <Icon name="book" color='#282828' size={16} />
-      <Text style={styles.text}>{title}</Text>
-    </View>
-
-    <View style={styles.line}>
-      <Icon name="paperclip" color='#282828' size={16} />
-      <Text style={styles.text}>{url ? url : '(Sem Url)'}</Text>
-    </View>
-  </View>
-);
+import { BookProps } from '../types/BookProps';
+import Item from './Item';
 
 export default function Form() {
   const [query, setQuery] = React.useState('');
@@ -36,11 +11,11 @@ export default function Form() {
 
   const getBooks = async () => {
     try {
-      const { data } = await api.get(query);
+      const params = new URLSearchParams([['query', query]]);
+      const { data } = await api.get('', { params });
       setBooks(data.hits);
     } catch (error) {
-      console.log(error);
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -56,27 +31,29 @@ export default function Form() {
         </View>
 
         <View style={styles.form}>
-          <TextInput style={styles.input} value={query} onChangeText={setQuery} placeholder='Digite algo' />
-          <TouchableWithoutFeedback
-            onPress={() => { getBooks() }}
-            disabled={query !== ''}
-            style={styles.button}
-            accessibilityLabel="Procurar por Livros"
-          >
-            <Icon name="search" color='#517fa4' size={16} />
+          <TextInput
+            style={styles.input}
+            value={query}
+            onChangeText={setQuery}
+            placeholder='Digite algo ...'
+            underlineColorAndroid='transparent'
+          />
+          <TouchableWithoutFeedback onPress={getBooks} disabled={query !== ''} accessibilityLabel="Procurar por Livros">
+            <View style={styles.button}>
+              <Icon name="search" color='#fff' size={16} />
+            </View>
           </TouchableWithoutFeedback>
         </View>
       </View>
 
       {
-        books !== [] &&
+        query !== '' && books.length !== 0 &&
         <View style={styles.body}>
           <FlatList
             data={books}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />
-          <Text>{books !== []}</Text>
         </View>
       }
     </View>
@@ -90,18 +67,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
+    flex: 1,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     padding: 6,
-    marginBottom: 4,
-    minHeight: 32,
   },
   titleContainer: {
-    marginBottom: 6,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -112,41 +88,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    width: 200,
+    width: '76%',
     backgroundColor: '#FFF',
     color: '#222',
-    padding: 2,
+    padding: 6,
     fontSize: 14,
     borderRadius: 6,
-    borderWidth: 1,
+    borderWidth: 0.8,
     borderColor: '#33A',
+    textAlign: 'left',
   },
   button: {
-    width: 16,
-    height: 16,
-    borderRadius: 6,
+    width: 36,
+    height: 36,
+    backgroundColor: '#3030A0B0',
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#33A'
   },
   body: {
-    flex: 1,
-  },
-  item: {
-    marginHorizontal: 8,
-    marginBottom: 4,
-    padding: 8,
-    backgroundColor: '#B7D',
-    borderRadius: 8,
-  },
-  line: {
-    marginBottom: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  text: {
-    marginLeft: 8,
-    fontSize: 12,
-    textAlign: 'justify',
+    flex: 3,
   },
 });
