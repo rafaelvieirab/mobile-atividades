@@ -1,5 +1,5 @@
 export type BookProps = {
-  id: string;
+  objectID: string;
   author: string;
   title: string;
   url: string;

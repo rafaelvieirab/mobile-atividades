@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ListRenderItemInfo, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { FlatList, ListRenderItemInfo, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import api from '../services/api';
 import { BookProps } from '../types/BookProps';
@@ -11,15 +11,7 @@ export default function Form() {
 
   const getBooks = async () => {
     try {
-      console.log("asd");
-
-      //const params = new URLSearchParams([['query', query]]);
-      const params = { query: query };
-      console.log(api.getUri());
-      const { data } = await api.get('?query=' + query);
-      // const { data } = await api.get('', { params });
-      console.log(data.args);
-      console.log(data.hits);
+      const { data } = await api.get(`/search?query=${query}`);
       setBooks(data.hits);
     } catch (error) {
       console.error(error);
@@ -27,7 +19,7 @@ export default function Form() {
   };
 
   const renderItem = ({ item }: ListRenderItemInfo<BookProps>) => (
-    <Item author={item.author} title={item.title} url={item.url} id={item.id} />
+    <Item author={item.author} title={item.title} url={item.url} objectID={item.objectID} />
   );
 
   return (
@@ -45,11 +37,11 @@ export default function Form() {
             placeholder='Digite algo ...'
             underlineColorAndroid='transparent'
           />
-          <TouchableWithoutFeedback onPress={getBooks} disabled={query !== ''} accessibilityLabel="Procurar por Livros">
+          <TouchableOpacity onPress={getBooks} disabled={query === ''} accessibilityLabel="Procurar por Livros">
             <View style={styles.button}>
               <Icon name="search" color='#fff' size={16} />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -59,7 +51,7 @@ export default function Form() {
           <FlatList
             data={books}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.objectID}
           />
         </View>
       }

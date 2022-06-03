@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, View, StatusBar, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, View, StatusBar } from 'react-native';
 import Form from './src/components/Form';
 
 export default function App() {

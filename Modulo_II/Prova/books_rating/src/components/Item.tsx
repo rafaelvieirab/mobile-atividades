@@ -5,7 +5,7 @@ import { BookProps } from '../types/BookProps';
 import Rating from './Rating';
 
 
-const Item: React.FC<BookProps> = ({ author, title, url, id }: BookProps) => (
+const Item: React.FC<BookProps> = ({ author, title, url }: BookProps) => (
   <View style={styles.item}>
     <View style={styles.line}>
       <Icon name="user" color='#282828' size={16} />
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginLeft: 8,
-    fontSize: 12,
+    fontSize: 13,
     textAlign: 'justify',
   },
 });

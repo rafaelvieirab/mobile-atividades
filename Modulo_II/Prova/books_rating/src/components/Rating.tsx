@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ratingValues from '../constraints/RatingValues';
 
 export default function Rating() {
   const [rate, setRate] = React.useState(0);
-  const [ratingValues, setRatingValues] = React.useState<number[]>([]);
 
   React.useEffect(() => {
     const random = 1 + (Math.random() * 4);
@@ -12,23 +12,19 @@ export default function Rating() {
     setRate(truncatedRandom);
   }, []);
 
-  React.useEffect(() => {
-    const tempArray = [];
-    for (let index = 1; index <= 5; index++)
-      tempArray.push(index)
-    setRatingValues(tempArray);
-  }, []);
-
   return (
     <View style={styles.container}>
       {
         ratingValues.map(ratingValue => (
-          <TouchableWithoutFeedback key={ratingValue} onPress={() => setRate(ratingValue)} >
+          <TouchableWithoutFeedback
+            key={ratingValue}
+            onPress={() => setRate(ratingValue)}
+            style={styles.button}
+          >
             <Icon
               name={ratingValue <= rate ? "star" : "star-o"}
               color={ratingValue <= rate ? "#F7F20C" : "#FFF"}
-              size={16}
-              style={styles.starStyle}
+              size={18}
             />
           </TouchableWithoutFeedback>
         ))
@@ -42,9 +38,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
   },
-  starStyle: {
-    borderWidth: 1,
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
