@@ -1,12 +1,24 @@
+import React from 'react';
 import { SafeAreaView, StyleSheet, View, StatusBar } from 'react-native';
-import Form from './src/components/Form';
+import Main from './src/components/Main';
+import ThemeSwitcher from './src/components/ThemeSwitcher';
+import { themes } from './src/constraints/Themes';
+import ThemeContext from './src/contexts/ThemeContext';
 
 export default function App() {
+  const [theme, setTheme] = React.useState(themes.light);
+
+  const toggleTheme = () => {
+    const newTheme = theme === themes.dark ? themes.light : themes.dark;
+    setTheme(newTheme);
+  };
+
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.safeAreaView}>
-        <Form />
-      </SafeAreaView>
+      <ThemeContext.Provider value={theme}>
+        <ThemeSwitcher toggleTheme={toggleTheme} />
+        <Main />
+      </ThemeContext.Provider>
     </View>
   );
 }

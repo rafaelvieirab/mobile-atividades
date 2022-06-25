@@ -1,32 +1,37 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ThemeContext from '../contexts/ThemeContext';
 import { BookProps } from '../types/BookProps';
 import Rating from './Rating';
 
 
-const Item: React.FC<BookProps> = ({ author, title, url }: BookProps) => (
-  <View style={styles.item}>
-    <View style={styles.line}>
-      <Icon name="user" color='#282828' size={16} />
-      <Text style={styles.text}>{author}</Text>
-    </View>
+const Item: React.FC<BookProps> = ({ author, title, url }: BookProps) => {
+  const theme = React.useContext(ThemeContext);
 
-    <View style={styles.line}>
-      <Icon name="book" color='#282828' size={16} />
-      <Text style={styles.text}>{title}</Text>
-    </View>
+  return (
+    <View style={styles.item}>
+      <View style={styles.line}>
+        <Icon name="user" color={theme.colorIcon} size={16} />
+        <Text style={styles.text}>{author}</Text>
+      </View>
 
-    <View style={styles.line}>
-      <Icon name="paperclip" color='#282828' size={16} />
-      <Text style={styles.text}>{url ? url : '(Sem Url)'}</Text>
-    </View>
+      <View style={styles.line}>
+        <Icon name="book" color={theme.colorIcon} size={16} />
+        <Text style={styles.text}>{title}</Text>
+      </View>
 
-    <View style={styles.line}>
-      <Rating />
+      <View style={styles.line}>
+        <Icon name="paperclip" color={theme.colorIcon} size={16} />
+        <Text style={styles.text}>{url ? url : '(Sem Url)'}</Text>
+      </View>
+
+      <View style={styles.line}>
+        <Rating />
+      </View>
     </View>
-  </View>
-);
+  );
+}
 
 
 const styles = StyleSheet.create({

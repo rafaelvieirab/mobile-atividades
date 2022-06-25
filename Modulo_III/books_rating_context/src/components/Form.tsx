@@ -1,75 +1,47 @@
 import React from 'react';
-import { FlatList, ListRenderItemInfo, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import api from '../services/api';
-import { BookProps } from '../types/BookProps';
-import Item from './Item';
+import ThemeContext from '../contexts/ThemeContext';
 
-export default function Form() {
+type FormProps = {
+  getBooks: Function;
+};
+
+const Form: React.FC<FormProps> = ({ getBooks }: FormProps) => {
   const [query, setQuery] = React.useState('');
-  const [books, setBooks] = React.useState<BookProps[]>([]);
-
-  const getBooks = async () => {
-    try {
-      const { data } = await api.get(`/search?query=${query}`);
-      setBooks(data.hits);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const renderItem = ({ item }: ListRenderItemInfo<BookProps>) => (
-    <Item author={item.author} title={item.title} url={item.url} objectID={item.objectID} />
-  );
+  const theme = React.useContext(ThemeContext);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Consulta Livros</Text>
-        </View>
-
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            value={query}
-            onChangeText={setQuery}
-            placeholder='Digite algo ...'
-            underlineColorAndroid='transparent'
-          />
-          <TouchableOpacity onPress={getBooks} disabled={query === ''} accessibilityLabel="Procurar por Livros">
-            <View style={styles.button}>
-              <Icon name="search" color='#fff' size={16} />
-            </View>
-          </TouchableOpacity>
-        </View>
+    <View style={styles.header}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Consulta Livros</Text>
       </View>
 
-      {
-        query !== '' && books.length !== 0 &&
-        <View style={styles.body}>
-          <FlatList
-            data={books}
-            renderItem={renderItem}
-            keyExtractor={item => item.objectID}
-          />
-        </View>
-      }
+      <View style={styles.form}>
+        <TextInput
+          style={{ ...styles.input, backgroundColor: theme.background }}
+          value={query}
+          onChangeText={setQuery}
+          placeholder='Digite algo ...'
+          underlineColorAndroid='transparent'
+        />
+        <TouchableOpacity onPress={() => getBooks(query)} disabled={query === ''} accessibilityLabel="Procurar por Livros">
+          <View style={{ ...styles.button, backgroundColor: theme.button }}>
+            <Icon name="search" color='#fff' size={16} />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   header: {
     flex: 1,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 40,
     padding: 6,
   },
   titleContainer: {
@@ -101,11 +73,10 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     backgroundColor: '#3030A0B0',
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  body: {
-    flex: 3,
-  },
 });
+
+export default Form;
