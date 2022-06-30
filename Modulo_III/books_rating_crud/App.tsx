@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, StatusBar } from 'react-native';
 import Main from './src/components/Main';
 import BookContext from './src/contexts/BookContext';
-import { reducer, initialState } from './src/redux/redux';
+import { reducer, initialState } from './src/redux/reducer';
 
 export default function App() {
   const [state, dispatch] = React.useReducer(reducer, initialState);

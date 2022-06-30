@@ -38,10 +38,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#B8D',
     borderRadius: 8,
 
-    // alignItems: 'center',
-    // borderBottomWidth: 0.25,
-    // justifyContent: 'center',
-    // height: 50,
+    borderBottomWidth: 0.25,
   },
   line: {
     marginBottom: 4,

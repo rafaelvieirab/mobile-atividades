@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react';
-import { FlatList, ListRenderItemInfo, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import React from 'react';
+import { ListRenderItemInfo, StyleSheet, TouchableOpacity, View, Text, FlatList } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import BookContext from '../contexts/BookContext';
 import { ActionTypes } from '../redux/action-types';
@@ -9,21 +9,23 @@ import Form from './Form';
 import Item from './Item';
 
 export default function Main() {
-  const [books, setBooks] = React.useState<BookProps[]>([]);
   const { state, dispatch } = React.useContext(BookContext);
 
   const getBooks = async (query: string) => {
     try {
       const { data } = await api.get(`/search?query=${query}`);
-      dispatch({ type: ActionTypes.ADD_MANY, payload: data.hits });
-      console.log(state.books[0].title);
-      // setBooks(data.hits);
+      dispatch({ type: ActionTypes.ADD_MANY, payload: data.hits/*.slice(10) */ });
     } catch (error) {
       console.error(error);
     }
   };
 
+  const goModal = (isEdit?: boolean) => {
+    // navega para a tela do CreateBook
+  }
+
   const deleteBook = (book: BookProps) => {
+    console.log(book.title);
     dispatch({ type: ActionTypes.DELETE, payload: book });
   };
 
@@ -31,24 +33,22 @@ export default function Main() {
     <Item author={item.author} title={item.title} url={item.url} objectID={item.objectID} />
   );
 
-  const renderItem2 = (data: any, rowMap: any) => (
+  const renderItem2 = (data: any) => (
     <View style={styles.rowFront}>
-      <Text>{data}</Text>
-      <Text>{data.item}</Text>
-      <Text>{data.item.text}</Text>
+      <Item author={data.item.author} title={data.item.title} url={data.item.url} objectID={data.item.objectID} />
     </View>
   );
 
-  // const renderHiddenItem2 = ({ item, rowMap }: ListRenderItemInfo<BookProps>) => (
-  //   <View style={styles.rowBack} >
-  //     <TouchableOpacity>
-  //       <Text>Edit</Text>
-  //     </TouchableOpacity>
-  //     <TouchableOpacity style={[styles.backRightBtn]} >
-  //       <Text style={{ color: '#FFF' }}>Delete</Text>
-  //     </TouchableOpacity>
-  //   </View>
-  // );
+  const renderHiddenItem2 = (data: any) => (
+    <View style={styles.rowBack} >
+      <TouchableOpacity onPress={() => goModal(true)}>
+        <Text>Edit</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => deleteBook(data.item)} style={[styles.backRightBtn]}>
+        <Text style={{ color: '#FFF' }}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   const renderHiddenItem = ({ item }: ListRenderItemInfo<BookProps>) => (
     <Item author={item.author} title={item.title} url={item.url} objectID={item.objectID} />
@@ -59,22 +59,19 @@ export default function Main() {
       <Form getBooks={getBooks} />
 
       <View style={styles.body}>
-        {/* <Suspense fallback={<View>Loading...</View>}> */}
         {/* <FlatList
-            data={books}
-            renderItem={renderItem}
-            keyExtractor={item => item.objectID}
-          /> */}
+          data={state.books}
+          renderItem={renderItem}
+          keyExtractor={item => item.objectID}
+        /> */}
         <SwipeListView
-          useFlatList={true}
-          // data={books}
+          // useFlatList={true}
           data={state.books}
           renderItem={renderItem2}
-        // renderHiddenItem={renderHiddenItem2}
-        // leftOpenValue={75}
-        // rightOpenValue={-75}
+          renderHiddenItem={renderHiddenItem2}
+          leftOpenValue={75}
+          rightOpenValue={-75}
         />
-        {/* </Suspense> */}
       </View>
     </View>
   );
@@ -92,7 +89,6 @@ const styles = StyleSheet.create({
   },
   rowFront: {
     alignItems: 'center',
-    backgroundColor: '#F00',
     borderBottomWidth: 0.25,
     justifyContent: 'center',
     height: 50,

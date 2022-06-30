@@ -1,5 +1,5 @@
 import React from "react";
-import { StateType } from "../redux/redux";
+import { StateType } from "../redux/reducer";
 
 interface ContextType {
   state: StateType;
