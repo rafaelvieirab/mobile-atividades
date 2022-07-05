@@ -31,14 +31,12 @@ const Item: React.FC<BookProps> = ({ author, title, url }: BookProps) => {
 
 const styles = StyleSheet.create({
   item: {
+    width: '99%',
     marginHorizontal: 6,
-    marginBottom: 4,
     paddingVertical: 10,
     paddingHorizontal: 12,
     backgroundColor: '#B8D',
     borderRadius: 8,
-
-    borderBottomWidth: 0.25,
   },
   line: {
     marginBottom: 4,

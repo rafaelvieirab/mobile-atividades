@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-type FormProps = {
+type BookSearchProps = {
   getBooks: Function;
 };
 
-const Form: React.FC<FormProps> = ({ getBooks }: FormProps) => {
+const BookSearch: React.FC<BookSearchProps> = ({ getBooks }: BookSearchProps) => {
   const [query, setQuery] = React.useState('');
 
   return (
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Form;
+export default BookSearch;

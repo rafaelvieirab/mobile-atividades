@@ -35,8 +35,4 @@ function reducer(state = initialState, action: ActionType) {
   }
 }
 
-// const store = configureStore({
-//   reducer: reducer,
-// });
-
 export { StateType, initialState, reducer };
